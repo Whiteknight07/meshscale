@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.1 — 2026-10-27
+
+Patch release. No configuration or state migration.
+
+- **Fix:** the daemon now records every successful device poll as its last sync, not
+  only polls that changed the inventory. `meshscale doctor` no longer warns
+  "last sync … ago" on a healthy daemon whose devices have not changed for three minutes.
+- The installer's final hint is now `sudo -H meshscale up`, which signs in, prepares the
+  account and connects; the separate `login` step is no longer needed.
+- Documentation: README now states that own SSH denies all logins without a policy
+  (matching 0.1.0 behaviour); account setup describes the public OAuth client;
+  SECURITY.md names the supported release; contributor prerequisites for namespace
+  tests are complete. Test fixtures use synthetic identifiers only.
+
 ## 0.1.0 — 2026-10-27
 
 First public development release. It is not a stable release. Dates and measurements in design documents describe development observations, not supported-platform guarantees.
@@ -20,4 +34,4 @@ First public development release. It is not a stable release. Dates and measurem
 - CI checks, draft release packaging, checksums, dependency notices, and guided Linux installer.
 - MIT licensing, public contribution/security guidance, documentation index, and release privacy/history/dependency audit.
 
-Sign in with Cloudflare uses a public OAuth client that works for any Cloudflare account. Independent host qualification and release artifacts remain release gates. See the [roadmap](docs/roadmap.md) and [release audit](docs/release/history-audit.md).
+Sign in with Cloudflare uses a public OAuth client that works for any Cloudflare account. Release archives, the installer, checksums and GitHub artifact attestations are published on GitHub Releases. Independent sign-in trials and supported-host qualification remain open release gates. See the [roadmap](docs/roadmap.md) and [release audit](docs/release/history-audit.md).
