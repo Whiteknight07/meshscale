@@ -50,11 +50,11 @@ func PollDevices(ctx context.Context, p *Poller, ctrl *Control, interval time.Du
 			if err != nil {
 				s.SyncError = err.Error()
 			} else {
+				// LastSync means the last successful poll. Unchanged inventory is
+				// still a fresh sync; doctor warns when this timestamp ages.
 				s.Devices = count
 				s.SyncError = ""
-				if changed {
-					s.LastSync = time.Now().UTC()
-				}
+				s.LastSync = time.Now().UTC()
 			}
 		})
 		if err != nil {

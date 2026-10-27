@@ -50,6 +50,54 @@ func TestPollRetriesHooksAndIgnoresUnchanged(t *testing.T) {
 	}
 }
 
+// LastSync is the last successful poll, not the last inventory change: doctor
+// warns when it is old, so a quiet, healthy account must keep it current.
+func TestPollDevicesRecordsUnchangedSuccessfulSync(t *testing.T) {
+	var mu sync.Mutex
+	loads := 0
+	poll := &Poller{Registry: &devicesync.Registry{}, Load: func(context.Context) (devicesync.Snapshot, error) {
+		mu.Lock()
+		loads++
+		mu.Unlock()
+		return devicesync.Snapshot{Devices: []devicesync.Device{{ID: "a", Name: "laptop", IPv4: "100.96.0.2"}}}, nil
+	}}
+	ctrl := &Control{}
+	ctx, cancel := context.WithCancel(t.Context())
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		PollDevices(ctx, poll, ctrl, time.Millisecond, log.New(io.Discard, "", 0))
+	}()
+	defer func() { cancel(); <-done }()
+	// A load starts only after the previous poll updated the status.
+	lastSyncAfter := func(n int) time.Time {
+		deadline := time.Now().Add(5 * time.Second)
+		for {
+			mu.Lock()
+			current := loads
+			mu.Unlock()
+			if current >= n {
+				return ctrl.Status().LastSync
+			}
+			if time.Now().After(deadline) {
+				t.Fatalf("only %d polls ran", current)
+			}
+			time.Sleep(time.Millisecond)
+		}
+	}
+	first := lastSyncAfter(2)
+	if first.IsZero() {
+		t.Fatal("first successful poll did not record LastSync")
+	}
+	time.Sleep(5 * time.Millisecond)
+	mu.Lock()
+	next := loads + 2
+	mu.Unlock()
+	if later := lastSyncAfter(next); !later.After(first) {
+		t.Fatalf("unchanged successful polls left LastSync at %v (later read %v)", first, later)
+	}
+}
+
 type fakeBackend struct {
 	mu        sync.Mutex
 	enrolled  bool

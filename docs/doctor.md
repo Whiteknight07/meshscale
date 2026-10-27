@@ -23,8 +23,9 @@ organization and effective safe Include profile, daemon reachability and last
 successful sync age, secure engine/errors/handshakes, saved SSH mode and daemon
 SSH enablement, a system resolver lookup of a known Mesh name, WARP route and
 MTU evidence, Tailscale coexistence, an authenticated account-organization GET,
-and one peer reachability probe. Last sync older than three minutes warns; a
-reported sync error fails. An absent daemon warns unless enabled secure mode
+and one peer reachability probe. The daemon records every successful device poll
+(default every minute), including when nothing changed; a last sync older than
+three minutes warns, and a reported sync error fails. An absent daemon warns unless enabled secure mode
 requires it. A deliberately paused connection warns.
 
 DNS uses cached inventory when available; without it, names are derived from
