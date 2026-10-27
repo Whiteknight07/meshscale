@@ -35,7 +35,7 @@ Follow [installation and rollback](docs/install.md) for official-client packages
 
 ## Quick start
 
-1. **Install** meshscale and the official Cloudflare One client using the [verified installer](docs/install.md#quick-install-release) (or the source instructions while releases are unpublished).
+1. **Install** meshscale and the official Cloudflare One client using the [verified installer](docs/install.md#quick-install-release).
 2. **Connect**:
 
    ```sh

@@ -2,7 +2,7 @@
 
 This is a public design proposal for a solo developer connecting Linux servers and a Mac, followed by small-team use. It describes release criteria rather than promised dates. The [feature inventory](tailscale-parity.md) distinguishes implemented subsets from missing capabilities.
 
-The bundled OAuth client is public, so any Cloudflare account can sign in. The remaining release gates are sign-in trials with independent accounts, safe artifact distribution, and independent supported-host qualification; the [privacy/history review](release/history-audit.md) is complete and the repository was published with a fresh history. Installer and release packaging code exists; distribution still requires successful qualification and owner publication.
+The bundled OAuth client is public, so any Cloudflare account can sign in. The remaining release gates are sign-in trials with independent accounts, safe artifact distribution, and independent supported-host qualification; the [privacy/history review](release/history-audit.md) is complete and the repository was published with a fresh history. Release archives, the installer and attestations are published on GitHub Releases; supported-host qualification is still pending.
 
 ## Onboarding baseline and measurement method
 
@@ -56,7 +56,7 @@ Sequence: unblock distribution (#1), deliver install artifacts (#2–3), qualify
 
 Maintainer decisions before broad distribution:
 
-1. **Public release gate:** approve irreversible public OAuth visibility and public branding/site details once the exact client/domain TXT configuration is reviewable. Until then use a clearly private pilot; do not claim public onboarding.
+1. **Public release gate (done 2026-10-27):** the OAuth client is public, verified on `meshscale.stavan.ai`.
 2. **Support promise:** keep the proposed first cohort Debian/Ubuntu amd64/arm64 and Apple Silicon macOS 14+, or fund Windows/Intel/NAS coverage sooner. The ranking assumes the former; source portability is not a support commitment.
 3. **Plan/cost ceiling:** treat Free-plan core behavior as the default; decide whether Enterprise-only resolver/logging features merit optional tiers. Present actual entitlement/cost before enabling paid resources.
 4. **Trust/migration defaults:** decide when proven Cloudflare SSH can become the recommended default, with its plaintext-at-edge tradeoff; whether users needing universal peer E2EE or mobile/home exits are outside the initial audience. Do not hide those gaps in a parity score.

@@ -353,4 +353,4 @@ if [ "$service" = true ]; then
 else
     note 'Background service skipped. Opt in with --service or meshscale service install after login/up.'
 fi
-note 'Next: sudo -H meshscale login --no-browser; sudo -H meshscale up --hostname my-linux-node'
+note 'Next: sudo -H meshscale up  (signs in, sets up the account and connects this machine)'
