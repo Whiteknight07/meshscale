@@ -1,0 +1,6 @@
+go test fuzz v1
+string("meshscale-secure-v1-\u0094")
+string("0")
+string("0")
+string("0")
+string("0")

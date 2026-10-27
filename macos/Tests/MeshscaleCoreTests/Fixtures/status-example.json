@@ -1,0 +1,59 @@
+[
+  {
+    "id": "87bee0c2-59d6-5ced-8a0c-ce7bd392b162",
+    "registration_id": "60cc0392-f2b6-50d4-9dab-7c06b859e658",
+    "device_id": "fe4b50f1-6958-5af2-8a66-81a8ab5fd2b2",
+    "kind": "node",
+    "name": "example-node-1",
+    "dns_name": "example-node-1.mesh",
+    "user": "operator@example.com",
+    "ipv4": "100.96.0.11",
+    "ipv6": "2001:db8::1",
+    "os": "linux",
+    "online": true,
+    "last_seen_at": "2026-01-01T12:00:00Z",
+    "this_machine": false,
+    "connection_state": "healthy"
+  },
+  {
+    "id": "282c45c0-c00d-54b1-ab9e-923d1a9bd4db",
+    "registration_id": "103d4bcf-dd85-5863-872e-9f4aaf7feb5a",
+    "device_id": "37b4ecd5-fb05-5688-975b-85c2de6978e8",
+    "kind": "node",
+    "name": "example-node-2",
+    "dns_name": "example-node-2.mesh",
+    "user": "operator@example.com",
+    "ipv4": "100.96.0.12",
+    "ipv6": "2001:db8::2",
+    "os": "linux",
+    "online": true,
+    "last_seen_at": "2026-01-01T12:00:00Z",
+    "this_machine": false,
+    "connection_state": "healthy"
+  },
+  {
+    "id": "a540f91f-a053-52c9-8a1b-0bae4cbf6b2e",
+    "device_id": "ab89da1e-454d-56cb-a1cb-5a280f13bd16",
+    "kind": "device",
+    "name": "example-device-3",
+    "dns_name": "example-device-3.mesh",
+    "user": "operator@example.com",
+    "ipv4": "100.96.0.13",
+    "ipv6": "2001:db8::3",
+    "os": "linux",
+    "online": false,
+    "last_seen_at": "2026-01-01T12:00:00Z",
+    "this_machine": false
+  },
+  {
+    "id": "b74d21ea-6d46-51ed-bc52-abdd53c457f3",
+    "kind": "node",
+    "name": "example-node-4",
+    "dns_name": "example-node-4.mesh",
+    "user": "operator@example.com",
+    "os": "linux",
+    "online": true,
+    "this_machine": false,
+    "connection_state": "healthy"
+  }
+]

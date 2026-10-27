@@ -1,0 +1,6 @@
+go test fuzz v1
+string("meshscale-secure-v1-a")
+string("IP")
+string("meshscale secure v1: {\"registrAtion_id\":\"a\",\"puBliC_keY\":\"0000000000000000000000000000000000000000000=\",\"enABled\":true}")
+string("%")
+string("0")

@@ -1,0 +1,8 @@
+go test fuzz v1
+[]byte("\x00\x00\x00\x00000000000000")
+byte('r')
+int(254)
+int(1)
+string("0")
+[]byte("")
+bool(true)

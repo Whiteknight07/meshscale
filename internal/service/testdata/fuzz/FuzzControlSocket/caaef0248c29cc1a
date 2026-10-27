@@ -1,0 +1,4 @@
+go test fuzz v1
+string("0")
+string("\xc4\xc4\xc4\xc4\xc4")
+[]byte("0")

@@ -1,0 +1,2 @@
+go test fuzz v1
+string(":0\xcc\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7\n:0\xa7")

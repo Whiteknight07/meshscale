@@ -1,0 +1,12 @@
+import { readFile, writeFile } from 'node:fs/promises'
+const dir = new URL('../', import.meta.url)
+let html = await readFile(new URL('dist/index.html', dir), 'utf8')
+const script = html.match(/<script type="module"[^>]* src="([^"]+)"[^>]*><\/script>/)
+const css = html.match(/<link rel="stylesheet"[^>]* href="([^"]+)"[^>]*>/)
+if (!script || !css) throw new Error('Build output assets were not found')
+const js = await readFile(new URL(`dist/${script[1].replace(/^\//, '')}`, dir), 'utf8')
+const styles = await readFile(new URL(`dist/${css[1].replace(/^\//, '')}`, dir), 'utf8')
+html = html.replace(script[0], `<script>window.__MESHSCALE_REVIEW__ = true;</script><script type="module">${js.replace(/<\/script/gi, '<\\/script')}</script>`)
+html = html.replace(css[0], `<style>${styles}</style>`)
+await writeFile(new URL('preview.html', dir), html)
+console.log('Wrote standalone preview.html (all CSS, JS and SVG inlined)')

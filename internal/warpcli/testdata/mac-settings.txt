@@ -1,0 +1,59 @@
+Merged configuration:
+(not set)	Compliance Environment: Normal
+(derived)	Always On: true
+(override)	Switch Locked: false
+(network policy)	Mode: WarpWithDnsOverHttps
+(network policy)	WARP tunnel protocol: MASQUE
+(default)	Packet Tunnel: false
+(not set)	MASQUE Protocol Settings: 
+  HTTP Version: MASQUE (HTTP/3 with HTTP/2 fallback)
+(not set)	PKIX config: not set
+(network policy)	Post-quantum support for MASQUE: Enabled (downgrades allowed)
+(default)	Disabled for Wifi: false
+(default)	Disabled for Ethernet: false
+(reg defaults)	Resolve via: 0123456789abcdef0123456789abcdef.cloudflare-gateway.com @ [162.159.36.1, 162.159.46.1, 2606:4700:4700::1111, 2606:4700:4700::1001]
+(not set)	qlog log until: FutureSystemTime(None)
+(default)	PMTUD enabled: true
+(default)	DoH MSS clamp enabled: true
+(default)	Onboarding: true
+(network policy)	Include mode, with hosts/ips:
+  100.96.0.0/12
+  2606:4700:cf1::/48
+  172.64.128.0/20 (Cloudflare One Token CIDR)
+  2606:4700:cf1::/48 (Cloudflare One CIDR)
+  example-team.cloudflareaccess.com
+  github.com
+  api.github.com
+(network policy)	Fallback domains:
+  home.arpa
+  intranet
+  internal
+  private
+  localdomain
+  domain
+  lan
+  home
+  host
+  corp
+  local
+  localhost
+  invalid
+  test
+(not set)	Daemon Teams Auth: false
+(network policy)	Disable Auto Fallback: false
+(network policy)	Captive Portal: 180
+(network policy)	Support URL: 
+(user set)	Organization: example-team
+(network policy)	Allow Mode Switch: false
+(network policy)	Allow Updates: false
+(not set)	Allow Managed Deployments: false
+(not set)	Version Config: none
+(network policy)	Allowed to Leave Org: true
+(api defaults)	Known apple connectivity check IPs: 17.253.0.0/16; 
+(default)	Unrestricted LAN override allowed: false
+(network policy)	Profile ID: 8d6a0403-7c05-49eb-b05e-f20c76f7cd40
+(not set)	Multi User Registration: false
+(default)	Service Recovery Task Enabled: false
+(network policy)	Register Tunnel Interface IP: true
+(not set)	Firewall Scope: All interfaces
+(network policy)	SCCM VPN Boundary Support: false

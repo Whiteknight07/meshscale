@@ -1,0 +1,202 @@
+name: Release packages (draft only)
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  packages:
+    name: Build CLI release archives
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          # Release builds never consume caches populated by other workflows.
+          cache: false
+      - name: Require a project license
+        run: test -s LICENSE
+      - name: Install dependency license tool
+        run: go install github.com/google/go-licenses/v2@v2.0.1
+      - name: Build and package
+        env:
+          CGO_ENABLED: '0'
+          EVENT: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          COMMIT: ${{ github.sha }}
+        run: |
+          version="0.0.0-dev.${COMMIT:0:12}"
+          if [[ "$EVENT" == push ]]; then
+            [[ "$REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]
+            version="$REF_NAME"
+          fi
+          epoch=$(git show -s --format=%ct "$COMMIT")
+          mkdir -p dist
+          for target in linux/amd64 linux/arm64 darwin/arm64; do
+            export GOOS="${target%/*}" GOARCH="${target#*/}"
+            stage="$RUNNER_TEMP/meshscale-${GOOS}-${GOARCH}"
+            mkdir -p "$stage"
+            go build -mod=readonly -trimpath -buildvcs=false -ldflags "-s -w -X main.version=$version" -o "$stage/meshscale" ./cmd/meshscale
+            cp LICENSE "$stage/LICENSE"
+            go-licenses report ./cmd/meshscale --ignore github.com/Whiteknight07/meshscale > "$stage/DEPENDENCY_LICENSES.csv"
+            go-licenses save ./cmd/meshscale --ignore github.com/Whiteknight07/meshscale --save_path "$stage/third-party-licenses"
+            # Native Go module inventory includes exact dependency versions/sums
+            # and build flags. Provenance binds the archive to this source commit.
+            printf 'Source commit: %s\n' "$COMMIT" > "$stage/BUILDINFO.txt"
+            go version -m "$stage/meshscale" | sed '1s|^[^:]*:|meshscale:|' >> "$stage/BUILDINFO.txt"
+            cp "$stage/BUILDINFO.txt" "dist/meshscale_${GOOS}_${GOARCH}.buildinfo.txt"
+            printf '%s\n' \
+              "meshscale $version ($GOOS/$GOARCH)" \
+              'A thin CLI layer over Cloudflare Mesh. Development software.' \
+              'Linux: use the attached install.sh; the official Cloudflare client is the default backend.' \
+              'Darwin: this archive is only the CLI. The separate Mac app zip is ad-hoc signed, not notarized.' \
+              'Account/OAuth access must already be authorized; downloading does not grant it.' \
+              'Install, enroll, recovery: https://github.com/Whiteknight07/meshscale/blob/main/docs/install.md' \
+              'Project license: LICENSE. Dependency reports, build/module inventory and notices are included.' > "$stage/README.txt"
+            tar --sort=name --mtime="@$epoch" --owner=0 --group=0 --numeric-owner \
+              --format=gnu --mode='u+rwX,go+rX,go-w' -C "$stage" -cf - \
+              meshscale LICENSE README.txt BUILDINFO.txt DEPENDENCY_LICENSES.csv third-party-licenses \
+              | gzip -n > "dist/meshscale_${GOOS}_${GOARCH}.tar.gz"
+          done
+          cp scripts/install.sh dist/install.sh
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: meshscale-cli-release
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+
+  macos:
+    name: Build ad-hoc Mac app (no Developer ID credentials)
+    runs-on: macos-15
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Build app and include dependency notices
+        env:
+          CGO_ENABLED: '0'
+          GOOS: darwin
+          GOARCH: arm64
+          EVENT: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          COMMIT: ${{ github.sha }}
+          APP_BUILD: ${{ github.run_number }}
+        run: |
+          [[ "$(uname -m)" == arm64 ]]
+          version="0.0.0-dev.${COMMIT:0:12}"
+          if [[ "$EVENT" == push ]]; then
+            [[ "$REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]
+            version="$REF_NAME"
+          fi
+          app_version="${version#v}"
+          app_version="${app_version%%[-+]*}"
+          mkdir -p dist
+          cli="$RUNNER_TEMP/meshscale-darwin-arm64"
+          notices="$RUNNER_TEMP/meshscale-notices"
+          go build -mod=readonly -trimpath -buildvcs=false -ldflags "-s -w -X main.version=$version" -o "$cli" ./cmd/meshscale
+          go install github.com/google/go-licenses/v2@v2.0.1
+          go-licenses save ./cmd/meshscale --ignore github.com/Whiteknight07/meshscale --save_path "$notices"
+          go-licenses report ./cmd/meshscale --ignore github.com/Whiteknight07/meshscale > "$notices/DEPENDENCY_LICENSES.csv"
+          go version -m "$cli" | sed '1s|^[^:]*:|meshscale:|' > "$notices/BUILDINFO.txt"
+          macos/scripts/swift.sh test
+          CLI_BINARY="$cli" APP_OUTPUT="$RUNNER_TEMP/meshscale.app" \
+            APP_VERSION="$app_version" DEPENDENCY_LICENSES_DIR="$notices" \
+            macos/scripts/build-app.sh
+          ditto -c -k --sequesterRsrc --keepParent "$RUNNER_TEMP/meshscale.app" dist/meshscale_macos_arm64.zip
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: meshscale-macos-release
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+
+  assemble:
+    name: Assemble checksummed release
+    needs: [packages, macos]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          pattern: meshscale-*-release
+          merge-multiple: true
+          path: dist
+      - name: Hash all release assets
+        working-directory: dist
+        run: |
+          sha256sum -- *.tar.gz *.zip *.buildinfo.txt install.sh > SHA256SUMS
+          sha256sum --check SHA256SUMS
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: meshscale-release
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+
+  provenance:
+    name: Attest tagged packages
+    if: github.event_name == 'push'
+    needs: assemble
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      id-token: write # Obtain a short-lived Sigstore signing certificate.
+      attestations: write # Store provenance for this run's release artifacts.
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: meshscale-release
+          path: dist
+      - uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        with:
+          subject-path: dist/*
+
+  draft:
+    name: Create draft for owner review
+    if: github.event_name == 'push'
+    needs: [assemble, provenance]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # Create a draft release; never publish or update one.
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: meshscale-release
+          path: dist
+      # Fail if the tag already has a release. Reruns never update or publish it.
+      - name: Create draft (publication belongs to the owner)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          gh release create "$VERSION" dist/* --draft --verify-tag --title "$VERSION" \
+            --notes 'Draft for owner review. Includes Linux amd64/arm64 and Darwin arm64 CLI packages, an Apple Silicon Mac app (ad-hoc signed, not Developer ID signed or notarized), installer, SHA256SUMS, dependency notices and Go module inventories. GitHub artifact attestations are available. Signing and supported-host trials remain separate release gates.'

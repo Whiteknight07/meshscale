@@ -1,0 +1,2 @@
+go test fuzz v1
+string("{}00\xc6\xc6\xc6\xc6\xc6\xc60\xc6000\xff\xff[]}")

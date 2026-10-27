@@ -1,0 +1,2 @@
+go test fuzz v1
+string("0\xc9\n0\xad:\x8c\n0\x81\n0\x9c\n0\xa8\n0\xad:\x8c\n0\x81")

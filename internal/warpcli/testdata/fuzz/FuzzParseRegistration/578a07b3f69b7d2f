@@ -1,0 +1,2 @@
+go test fuzz v1
+string("ID:0\r0")

@@ -1,0 +1,7 @@
+# Built binaries, live credentials, and third-party source checkouts stay local.
+/nativewg
+/nativewg-darwin
+/masque-config
+/state/
+/research/
+/inspect

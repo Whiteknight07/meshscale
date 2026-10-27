@@ -1,0 +1,3 @@
+go test fuzz v1
+string("\uf6be\uf6be")
+bool(true)

@@ -1,0 +1,6 @@
+go test fuzz v1
+int64(965)
+int64(1)
+bool(false)
+string("l4")
+string("0")

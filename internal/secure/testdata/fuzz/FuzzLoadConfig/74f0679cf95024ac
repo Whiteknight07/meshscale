@@ -1,0 +1,2 @@
+go test fuzz v1
+[]byte("{\"enabled\":true,\"aaaa\":\"\",\"aaaaaa\":\"\",\"aaaa_aaa0\x89\x89\x89\x89a_aaaaa_aaa_aaaaaa\":true}")

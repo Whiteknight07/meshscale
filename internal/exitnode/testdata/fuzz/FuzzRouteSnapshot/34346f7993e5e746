@@ -1,0 +1,8 @@
+go test fuzz v1
+[]byte("0000")
+byte('\x19')
+int(254)
+int(1)
+string("ŌŌŶ")
+[]byte("")
+bool(true)

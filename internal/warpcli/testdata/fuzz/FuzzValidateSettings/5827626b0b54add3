@@ -1,0 +1,2 @@
+go test fuzz v1
+string("(network policy)\tInclude mode, with hosts/ips:\n  100.97.0.0/12\n  2606:4700:Cf1::/70\n  172.64.128.0/20 000000\n  0000000000:/")

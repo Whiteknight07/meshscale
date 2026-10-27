@@ -1,0 +1,2 @@
+go test fuzz v1
+[]byte("{\"forwards\x8b\x8b\x8b\x8b\":[{\"port\":1,\"0\":0},{\"port\":0}]}")

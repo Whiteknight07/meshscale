@@ -1,0 +1,82 @@
+[
+  {
+    "id": "00000000-0000-4000-8000-000000000005",
+    "name": "meshscale rule: allow-1",
+    "description": "Managed by meshscale network rules v1; rule=allow-1",
+    "precedence": 1000,
+    "enabled": true,
+    "action": "allow",
+    "filters": [
+      "l4"
+    ],
+    "created_at": "2026-10-26T02:27:10Z",
+    "updated_at": "2026-10-26T02:27:31Z",
+    "deleted_at": null,
+    "identity": "",
+    "device_posture": "",
+    "version": 2,
+    "sharable": true,
+    "traffic": "net.src.internal_src_ip in {100.96.0.0/12 2606:4700:cf1:1000::/64} and (net.dst.ip in {100.96.0.0/30} or net.dst.ip in {100.96.0.5} or net.dst.ip in {100.96.0.6/31} or net.dst.ip in {100.96.0.8/29} or net.dst.ip in {100.96.0.16/28} or net.dst.ip in {100.96.0.32/27} or net.dst.ip in {100.96.0.64/26} or net.dst.ip in {100.96.0.128/25} or net.dst.ip in {100.96.1.0/24} or net.dst.ip in {100.96.2.0/23} or net.dst.ip in {100.96.4.0/22} or net.dst.ip in {100.96.8.0/21} or net.dst.ip in {100.96.16.0/20} or net.dst.ip in {100.96.32.0/19} or net.dst.ip in {100.96.64.0/18} or net.dst.ip in {100.96.128.0/17} or net.dst.ip in {100.97.0.0/16} or net.dst.ip in {100.98.0.0/15} or net.dst.ip in {100.100.0.0/14} or net.dst.ip in {100.104.0.0/13} or net.dst.ip in {2606:4700:cf1:1000::/64})",
+    "rule_settings": {}
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000014",
+    "name": "meshscale rule: allow-2",
+    "description": "Managed by meshscale network rules v1; rule=allow-2",
+    "precedence": 1001,
+    "enabled": true,
+    "action": "allow",
+    "filters": [
+      "l4"
+    ],
+    "created_at": "2026-10-26T02:27:11Z",
+    "updated_at": "2026-10-26T02:27:32Z",
+    "deleted_at": null,
+    "identity": "",
+    "device_posture": "",
+    "version": 2,
+    "sharable": true,
+    "traffic": "net.src.internal_src_ip in {100.96.0.3 2606:4700:cf1:1000::3} and (net.dst.ip in {100.96.0.4 2606:4700:cf1:1000::4} and net.dst.port == 8080)",
+    "rule_settings": {}
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000003",
+    "name": "meshscale rule: allow-3",
+    "description": "Managed by meshscale network rules v1; rule=allow-3",
+    "precedence": 1002,
+    "enabled": true,
+    "action": "allow",
+    "filters": [
+      "l4"
+    ],
+    "created_at": "2026-10-26T02:27:11Z",
+    "updated_at": "2026-10-26T02:30:42Z",
+    "deleted_at": null,
+    "identity": "",
+    "device_posture": "",
+    "version": 3,
+    "sharable": true,
+    "traffic": "net.src.internal_src_ip in {100.96.0.3 2606:4700:cf1:1000::3} and (net.dst.ip in {100.96.0.4 2606:4700:cf1:1000::4} and net.dst.port == 8081)",
+    "rule_settings": {}
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "name": "meshscale rule: default-deny",
+    "description": "Managed by meshscale network rules v1; rule=default-deny",
+    "precedence": 1003,
+    "enabled": true,
+    "action": "block",
+    "filters": [
+      "l4"
+    ],
+    "created_at": "2026-10-26T02:27:11Z",
+    "updated_at": "2026-10-26T02:29:56Z",
+    "deleted_at": null,
+    "identity": "",
+    "device_posture": "",
+    "version": 2,
+    "sharable": true,
+    "traffic": "net.dst.ip in {100.96.0.0/12 2606:4700:cf1:1000::/64}",
+    "rule_settings": {}
+  }
+]

@@ -1,0 +1,2 @@
+go test fuzz v1
+string("0000\xac\xac\xac\xac\xac\xac00")

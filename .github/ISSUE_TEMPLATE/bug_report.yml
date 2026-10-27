@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible meshscale problem.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report vulnerabilities privately using SECURITY.md. Never attach tokens, private keys, account/device IDs, personal addresses, raw packet captures, or unreviewed logs.
+        Run `meshscale doctor` for read-only diagnosis. Review `meshscale bugreport --help` and inspect any exported bundle before sharing it; redaction is not a reason to skip review.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Version and environment
+      description: meshscale version/commit, OS and architecture, backend, official client version, and whether secure mode or another VPN is involved. Omit identifying addresses.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimal commands or UI actions, using synthetic names and example addresses.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Reviewed diagnostics
+      description: Relevant redacted doctor output, errors, and test results. State which steps were not tested. Attach only material you reviewed for secrets and personal data.

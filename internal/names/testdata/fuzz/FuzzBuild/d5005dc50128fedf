@@ -1,0 +1,6 @@
+go test fuzz v1
+string("ҥȀȗ𰢝Ϩӵ\U000d544aӈłҵ")
+string("0")
+string("0")
+string("")
+string("0")

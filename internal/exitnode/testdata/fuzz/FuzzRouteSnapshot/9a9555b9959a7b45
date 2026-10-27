@@ -1,0 +1,8 @@
+go test fuzz v1
+[]byte("0000")
+byte('\x03')
+int(254)
+int(1)
+string("\xeb\x9c\xed\x98\xe3\xb3\xf0\xbe\xeb\xa6\xe3\xbe\xea\x94\xeb\xb70")
+[]byte("")
+bool(true)

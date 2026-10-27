@@ -1,0 +1,8 @@
+go test fuzz v1
+[]byte("0000")
+byte('\x15')
+int(51841)
+int(-68)
+string("")
+[]byte("")
+bool(false)

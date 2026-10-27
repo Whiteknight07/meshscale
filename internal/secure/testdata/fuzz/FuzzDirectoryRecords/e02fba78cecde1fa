@@ -1,0 +1,6 @@
+go test fuzz v1
+string("meshscale-secure-v1-")
+string("IP")
+string("meshscale secure v1: \u07b3")
+string("0")
+string("0")

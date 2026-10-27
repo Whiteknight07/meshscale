@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>meshscale: a Tailscale-style workflow for Cloudflare Mesh</title>
+<meta name="description" content="meshscale is an open-source CLI and Mac menu bar app that gives Cloudflare Mesh a Tailscale-style workflow: up, status, names, SSH and exit nodes.">
+<link rel="icon" href="/favicon.png">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+<header><img src="/logo.png" alt=""><a href="/">meshscale</a></header>
+<h1>Your devices on one private network, on Cloudflare.</h1>
+<p>meshscale is an open-source CLI and macOS menu bar app for <a href="https://developers.cloudflare.com/mesh/">Cloudflare Mesh</a>. It gives Mesh a Tailscale-style workflow: <code>meshscale up</code>, device status, <code>.mesh</code> names, keyless SSH, access rules and Linux exit nodes. Cloudflare's official client carries every packet; meshscale is a thin layer over it.</p>
+<a class="cta" href="https://github.com/Whiteknight07/meshscale">View on GitHub</a>
+
+<h2>Get started</h2>
+<pre><code>curl -fsSLO https://github.com/Whiteknight07/meshscale/releases/latest/download/install.sh
+sh install.sh
+meshscale up</code></pre>
+<p><code>meshscale up</code> opens "Sign in with Cloudflare", prepares your account, and connects this device. See the <a href="https://github.com/Whiteknight07/meshscale/blob/main/docs/install.md">install guide</a> for macOS and other options.</p>
+
+<h2>What "Sign in with Cloudflare" grants</h2>
+<p>meshscale asks for the Zero Trust permissions it needs to manage your Mesh: devices, connectors, networks, Access apps and policies, and SSH settings. Tokens stay on your device, in a file only your user can read. meshscale has no server of its own that receives them, and you can revoke access at any time with <code>meshscale logout</code> or from your Cloudflare profile.</p>
+
+<footer>
+<a href="https://github.com/Whiteknight07/meshscale">Source</a>
+<a href="/privacy">Privacy</a>
+<a href="/terms">Terms</a>
+<span>MIT licensed. Not affiliated with Cloudflare or Tailscale.</span>
+</footer>
+</main>
+</body>
+</html>

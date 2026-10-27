@@ -1,0 +1,2 @@
+go test fuzz v1
+string("{\"groups\":{\"servers\":[\"laptop\",\"nas\"],\"nested\":[\"group:servers\"]},\"rules\":[{\"from\":[\"*\",\"alice@example.com\",\"Mac 666Laptop\"],\"to\":[\"servers:22,443\",\"group:nested:1000-2000\",\"[2606:4700:cf1:1000::4]:I*\"]}]}")

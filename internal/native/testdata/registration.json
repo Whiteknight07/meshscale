@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "result": {
+    "id": "t.01a175c7-bb36-1c7f-baee-77c6ef7c7675",
+    "token": "REDACTED-device-credential",
+    "key": "QkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkI=",
+    "config": {
+      "interface": {"addresses": {"v4": "100.96.0.1", "v6": "2606:4700:cf1:1000::1"}},
+      "peers": [{
+        "public_key": "Q0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0M=",
+        "endpoint": {"v4": "162.159.193.9:0", "v6": "[2606:4700:100::a29f:c109]:0", "ports": [2408, 500]}
+      }]
+    },
+    "policy": {"policy_id": "fba0c86c-0694-4231-9e97-5b5efa6f1ac6", "tunnel_protocol": "masque"}
+  }
+}

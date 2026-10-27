@@ -1,0 +1,2 @@
+go test fuzz v1
+string("ACCount tYpe:000000000\nID:000000000\nDeviCe ID:000000000\nOrgAniZAtion:000000000")

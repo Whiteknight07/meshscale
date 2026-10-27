@@ -1,0 +1,130 @@
+$ docker inspect meshscale-native-tun --format 'network={{.HostConfig.NetworkMode}} cap_add={{json .HostConfig.CapAdd}} devices={{json .HostConfig.Devices}}'
+network=bridge cap_add=["CAP_NET_ADMIN"] devices=[{"PathOnHost":"/dev/net/tun","PathInContainer":"/dev/net/tun","CgroupPermissions":"rwm"}]
+
+$ docker inspect meshscale-native-1 --format 'network={{.HostConfig.NetworkMode}} user={{.Config.User}} cap_drop={{json .HostConfig.CapDrop}} devices={{json .HostConfig.Devices}}'
+network=bridge user=1001:1001 cap_drop=["ALL"] devices=[]
+
+$ docker exec meshscale-native-tun sh -c '! command -v warp-cli && echo "No WARP installed"'
+No WARP installed
+
+$ docker exec meshscale-native-1 sh -c '! command -v warp-cli && test ! -e /dev/net/tun && echo "No WARP, no TUN device"; grep CapEff /proc/1/status'
+No WARP, no TUN device
+CapEff:	0000000000000000
+
+$ docker exec meshscale-native-tun cat /tmp/native-up.log
+Reusing native Mesh registration: meshscale-native-tun
+Experimental native TUN running; Mesh IPv4=100.96.0.4 IPv6=2606:4700:cf1:1000::4 MTU=1280
+Foreground daemon: keep this process running; Ctrl-C, SIGTERM or meshscale down disconnects.
+
+$ docker exec meshscale-native-tun ip -4 route
+default via 172.17.0.1 dev eth0 
+100.96.0.0/12 dev meshscale0 scope link 
+172.17.0.0/16 dev eth0 proto kernel scope link src 172.17.0.12 
+
+$ docker exec meshscale-native-tun ip -6 route
+2606:4700:cf1:1000::4 dev meshscale0 proto kernel metric 256 pref medium
+2606:4700:cf1::/48 dev meshscale0 metric 1024 pref medium
+
+$ docker exec meshscale-native-tun ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 testuser@100.96.0.2 whoami
+Warning: Permanently added '100.96.0.2' (ED25519) to the list of known hosts.
+testuser
+
+$ docker exec meshscale-native-tun curl -sS --http0.9 --max-time 15 http://100.96.0.2:8080/
+hello from 100.96.0.2:8080, you are 100.96.0.4:53774
+
+$ docker exec meshscale-native-tun meshprobe dial 100.96.0.2:8080
+OK in 16ms: hello from 100.96.0.2:8080, you are 100.96.0.4:53776
+
+$ docker exec meshscale-node-1 meshprobe dial 100.96.0.4:8080
+OK in 18ms: hello from 100.96.0.4:8080, you are 100.96.0.2:37058
+
+$ docker exec meshscale-node-1 ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 testuser@100.96.0.4 whoami
+testuser
+
+$ docker exec meshscale-native-tun stat -c '%a %u %n' /state/native /state/native/registration.json
+700 0 /state/native
+600 0 /state/native/registration.json
+
+$ docker exec meshscale-native-1 cat /tmp/native-up.log
+Reusing native Mesh registration: meshscale-native-userspace
+Experimental native userspace running; Mesh IPv4=100.96.0.5 IPv6=2606:4700:cf1:1000::5 MTU=1280
+SOCKS5 CONNECT proxy: 127.0.0.1:1080 (numeric Mesh IPs only)
+Foreground daemon: keep this process running; Ctrl-C, SIGTERM or meshscale down disconnects.
+
+$ docker exec meshscale-native-1 curl -sS --http0.9 --socks5 127.0.0.1:1080 --max-time 15 http://100.96.0.2:8080/
+hello from 100.96.0.2:8080, you are 100.96.0.5:41792
+
+$ docker exec meshscale-native-1 meshscale ssh testuser@100.96.0.2 whoami
+testuser
+
+$ docker exec meshscale-native-1 meshscale ssh meshscale-docker-test whoami
+testuser
+
+$ docker exec meshscale-node-1 ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 testuser@100.96.0.5 whoami
+testuser
+
+$ docker exec meshscale-native-1 stat -c '%a %u %n' /state/config/meshscale/native /state/config/meshscale/native/registration.json
+700 1001 /state/config/meshscale/native
+600 1001 /state/config/meshscale/native/registration.json
+
+$ docker exec meshscale-native-1 ip -4 route
+default via 172.17.0.1 dev eth0 
+172.17.0.0/16 dev eth0 proto kernel scope link src 172.17.0.11 
+
+$ docker exec meshscale-native-1 meshscale status
+MESH IP     DEVICE                                                             DNS NAME                         USER/OWNER  OS     STATUS
+100.96.0.2  meshscale-docker-test                                              meshscale-docker-test.mesh       Mesh node   linux  online
+100.96.0.3  meshscale-docker-test-2                                            meshscale-docker-test-2.mesh     Mesh node   linux  online
+100.96.0.4  meshscale-native-tun                                               meshscale-native-tun.mesh        Mesh node   linux  online
+100.96.0.5  meshscale-native-userspace (this machine) [native (experimental)]  meshscale-native-userspace.mesh  Mesh node   linux  online
+
+$ docker exec meshscale-native-tun meshscale status
+MESH IP     DEVICE                                                       DNS NAME                         USER/OWNER  OS     STATUS
+100.96.0.2  meshscale-docker-test                                        meshscale-docker-test.mesh       Mesh node   linux  online
+100.96.0.3  meshscale-docker-test-2                                      meshscale-docker-test-2.mesh     Mesh node   linux  online
+100.96.0.4  meshscale-native-tun (this machine) [native (experimental)]  meshscale-native-tun.mesh        Mesh node   linux  online
+100.96.0.5  meshscale-native-userspace                                   meshscale-native-userspace.mesh  Mesh node   linux  online
+
+$ docker exec meshscale-native-1 cat /tmp/native-forget.log
+WARNING: The native backend is experimental. It is not a Cloudflare-documented forwarding mechanism under Cloudflare Zero Trust terms §6. It uses an undocumented device API that may change or break without notice. Use it only if you accept these risks.
+Created Mesh node: meshscale-native-forget
+Enrolled this machine using the experimental native backend.
+Experimental native userspace running; Mesh IPv4=100.96.0.6 IPv6=2606:4700:cf1:1000::6 MTU=1280
+SOCKS5 CONNECT proxy: 127.0.0.1:1081 (numeric Mesh IPs only)
+Foreground daemon: keep this process running; Ctrl-C, SIGTERM or meshscale down disconnects.
+
+$ docker exec meshscale-native-1 sh -c 'test ! -f /state/forget-native/registration.json && test ! -S /state/forget-native/control.sock && echo "Forgotten registration file and control socket are absent"'
+Forgotten registration file and control socket are absent
+
+$ docker exec meshscale-node-2 meshprobe dial 100.96.0.2:8080
+OK in 31ms: hello from 100.96.0.2:8080, you are 100.96.0.3:49778
+
+Earlier lifecycle test (recorded command output):
+$ docker exec -e XDG_CONFIG_HOME=/state/forget-config meshscale-native-1 meshscale down --forget
+Forgot native registration and deleted Mesh node: meshscale-native-forget
+
+Earlier periodic refresh, observed in each native container before the final binary restart:
+Native configuration refreshed.
+
+Retired spike cleanup:
+Deleted registration HTTP 204
+Spike node deletion HTTP 200
+Removed revoked spike/nativewg/state/registration.secret.json
+
+Read-only account audit (canonical JSON, sorted keys with standard spaces):
+/devices/policies: UNCHANGED 3eec5817b67177cd5d6f33e3026981e3f9e046f2c1af9e0c5b22c8847dfe1198
+/devices/policy: UNCHANGED ee6fe74e330877a3f3c3940a7601855b7794032f5559d9f270ec65aad472aa9a
+/devices/settings: UNCHANGED 8bf1a3455e405cead35ae1f90d03253db8851b43b52dd814ed591ffdc83ef52d
+/gateway/rules: UNCHANGED 8dbeda80c008c469d4b8305247b80815ca21c91b71d5db118d548431563cd85e
+
+Final checks:
+go vet ./...: PASS
+go test ./...: PASS
+go test -race ./internal/native ./internal/localstate ./internal/backend ./internal/config ./internal/sshserver ./internal/warpcli ./cmd/meshscale: PASS
+Darwin ARM64 cross-build: PASS
+git diff --check: PASS
+
+Static Linux/ARM64 binary sizes (same build flags):
+HEAD baseline: 11,610,330 bytes
+Current: 16,554,699 bytes
+Increase: 4,944,369 bytes (42.59%)

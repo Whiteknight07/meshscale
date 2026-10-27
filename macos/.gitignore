@@ -1,0 +1,7 @@
+.build/
+.swiftpm/
+bin/
+meshscale.app/
+.runtime/
+dist/
+__pycache__/

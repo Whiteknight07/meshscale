@@ -1,0 +1,2 @@
+go test fuzz v1
+[]byte("{\"rup:nonrules\":[{\"name\":\"owner\",\"from\":[\"alice@example.com\",\"device:abc\",\"nas\",\"*\"],\"users\":[\"autogroup:nonroo\x8c\",\"root\",\"bob\"]}]}")

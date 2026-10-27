@@ -1,0 +1,2 @@
+go test fuzz v1
+[]byte("[{\"dst\":\"1.1.1.1\",\"dev\":\"\\th0\",\"gateway\":\"192.168.1.1\",\"table\":\"main\"}]")

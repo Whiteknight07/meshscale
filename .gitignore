@@ -1,0 +1,21 @@
+# Go
+/bin/
+/dist/
+*.test
+*.out
+
+# Node / Worker
+node_modules/
+.alchemy/
+.wrangler/
+.dev.vars
+
+# macOS / Xcode
+.DS_Store
+xcuserdata/
+DerivedData/
+
+# Secrets
+.env
+.env.*
+/meshscale

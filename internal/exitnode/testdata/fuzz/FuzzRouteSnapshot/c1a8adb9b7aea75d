@@ -1,0 +1,8 @@
+go test fuzz v1
+[]byte("0000")
+byte('\x1b')
+int(254)
+int(1)
+string("\xf1\x8b\x8b\U0004b2cb")
+[]byte("")
+bool(true)
