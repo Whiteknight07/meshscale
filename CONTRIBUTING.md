@@ -48,7 +48,7 @@ Follow [macos/README.md](macos/README.md) for bundle builds. Linux cannot valida
 
 ## Linux namespace integration tests
 
-These tests require Linux, root or the corresponding namespace/network capabilities, `iproute2`, `util-linux` (`unshare`, `nsenter`), `nftables`, `/dev/net/tun`, and kernel WireGuard where applicable. Run them only on a disposable Linux VM. Never enable live tests in the network namespace of a machine used for remote access.
+These tests require Linux, root or the corresponding namespace/network capabilities, `iproute2`, `util-linux` (`unshare`, `nsenter`), `nftables`, `iptables`/`ip6tables`, `curl`, `ping` (iputils), `python3`, `/etc/protocols` (Debian/Ubuntu `netbase`), `/dev/net/tun`, and kernel WireGuard where applicable. Run them only on a disposable Linux VM. Never enable live tests in the network namespace of a machine used for remote access.
 
 Compile first, then enter a fresh anonymous network namespace for each invocation. The namespace disappears when its process exits; the host's routes/firewall remain outside it:
 

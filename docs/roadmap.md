@@ -2,7 +2,7 @@
 
 This is a public design proposal for a solo developer connecting Linux servers and a Mac, followed by small-team use. It describes release criteria rather than promised dates. The [feature inventory](tailscale-parity.md) distinguishes implemented subsets from missing capabilities.
 
-The bundled OAuth client is public, so any Cloudflare account can sign in. The remaining release gates are sign-in trials with independent accounts, safe artifact distribution, and independent supported-host qualification; the [privacy/history review](release/history-audit.md) is complete and the repository was published with a fresh history. Release archives, the installer and attestations are published on GitHub Releases; supported-host qualification is still pending.
+The bundled OAuth client is public, so any Cloudflare account can sign in. The remaining release gates are sign-in trials with independent accounts and independent supported-host qualification; the [privacy/history review](release/history-audit.md) is complete and the repository was published with a fresh history. Release archives, the installer and attestations are published on GitHub Releases; supported-host qualification is still pending.
 
 ## Onboarding baseline and measurement method
 

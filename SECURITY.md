@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-meshscale is pre-release development software. There is no stable release or long-term support promise yet. Security fixes target the current `main` branch; older commits and experimental prototypes are not maintained separately. An external security audit has not been performed.
+meshscale is development software (0.x). There is no stable release or long-term support promise yet. Security fixes target the current `main` branch and are shipped in the next patch release; only the latest published release is supported. Older releases, commits and experimental prototypes are not maintained separately. An external security audit has not been performed.
 
 ## Private reporting
 

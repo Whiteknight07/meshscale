@@ -169,16 +169,14 @@ Node, connector, route, service-token, account-read, user-read, and refresh-toke
 scopes remain for existing CLI functionality. No `openid` or invented Billing
 scope is requested.
 
-The registered client `d2dbeb9f03b4cdcc7536e2bb7d2b642f` was read, then updated
-with PATCH `/accounts/{id}/oauth_clients/{client_id}` using only the existing
-scope list plus `access.write`. The response confirmed **visibility `private`**,
-secretless token authentication `none`, and the new scope list. No publication,
-redirect change, secret rotation, or other dev-account mutation was performed.
-For Cloudflare SSH, the same client was read and PATCHed again on 2026-10-26
-with only its existing scopes plus `access-ssh-auditing.write`. Readback retained
-visibility `private`, secretless authentication `none`, redirects, and all other
-client properties. No browser was required for client registration.
-Existing OAuth users must run `meshscale login` again to consent to the new scopes.
+The bundled client `729d292b876c17b76bdb960f02410abd` (`auth.DefaultClientID`) is
+**public**, secretless (token authentication `none`, PKCE), verified for
+`https://meshscale.stavan.ai`, and registers exactly the scope list above with the
+redirects `http://127.0.0.1:8976/callback` and `http://localhost:8976/callback`.
+Keep the CLI's requested scopes (`internal/auth`) and the registered client
+scopes identical. A self-registered client used through
+`MESHSCALE_OAUTH_CLIENT_ID` needs the same scopes and redirect. When the scope
+list changes, existing OAuth users must run `meshscale login` again to consent.
 
 ## Validation and fresh-account test
 

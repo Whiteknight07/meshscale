@@ -1,7 +1,7 @@
 {
   "success": true,
   "result": {
-    "id": "t.01a175c7-bb36-1c7f-baee-77c6ef7c7675",
+    "id": "t.00000000-0000-4000-8000-0000000000a1",
     "token": "REDACTED-device-credential",
     "key": "QkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkI=",
     "config": {
@@ -11,6 +11,6 @@
         "endpoint": {"v4": "162.159.193.9:0", "v6": "[2606:4700:100::a29f:c109]:0", "ports": [2408, 500]}
       }]
     },
-    "policy": {"policy_id": "fba0c86c-0694-4231-9e97-5b5efa6f1ac6", "tunnel_protocol": "masque"}
+    "policy": {"policy_id": "00000000-0000-4000-8000-0000000000b1", "tunnel_protocol": "masque"}
   }
 }

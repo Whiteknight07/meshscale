@@ -8,16 +8,16 @@ public enum ReviewFixture {
         // Copied verbatim from the approved frontend mock; never used by the live client.
         let json = #"""
         [
-          {"id":"reg-mac","device_id":"dev-mac","kind":"device","name":"macbook-air","dns_name":"macbook-air.mesh","user":"alex@hey.com","ipv4":"100.96.0.2","os":"mac","online":true,"last_seen_at":"2026-10-26T12:00:00Z","this_machine":true},
+          {"id":"reg-mac","device_id":"dev-mac","kind":"device","name":"macbook-air","dns_name":"macbook-air.mesh","user":"alex@example.com","ipv4":"100.96.0.2","os":"mac","online":true,"last_seen_at":"2026-10-26T12:00:00Z","this_machine":true},
           {"id":"node-homelab","registration_id":"reg-homelab","kind":"node","name":"homelab","dns_name":"homelab.mesh","user":"Mesh node","ipv4":"100.96.0.10","os":"linux","online":true,"last_seen_at":"2026-10-26T12:00:00Z","this_machine":false,"connection_state":"healthy"},
-          {"id":"reg-pixel","device_id":"dev-pixel","kind":"device","name":"pixel-9","dns_name":"pixel-9.mesh","user":"alex@hey.com","ipv4":"100.96.0.12","os":"android","online":true,"last_seen_at":"2026-10-26T12:00:00Z","this_machine":false},
+          {"id":"reg-pixel","device_id":"dev-pixel","kind":"device","name":"pixel-9","dns_name":"pixel-9.mesh","user":"alex@example.com","ipv4":"100.96.0.12","os":"android","online":true,"last_seen_at":"2026-10-26T12:00:00Z","this_machine":false},
           {"id":"node-nas","registration_id":"reg-nas","kind":"node","name":"nas","dns_name":"nas.mesh","user":"Mesh node","ipv4":"100.96.0.20","os":"linux","online":true,"last_seen_at":"2026-10-26T12:00:00Z","this_machine":false},
-          {"id":"reg-thinkpad","kind":"device","name":"old-thinkpad","dns_name":"old-thinkpad.mesh","user":"alex@hey.com","ipv4":"100.96.0.31","os":"linux","online":false,"last_seen_at":"2026-10-23T12:00:00Z","this_machine":false}
+          {"id":"reg-thinkpad","kind":"device","name":"old-thinkpad","dns_name":"old-thinkpad.mesh","user":"alex@example.com","ipv4":"100.96.0.31","os":"linux","online":false,"last_seen_at":"2026-10-23T12:00:00Z","this_machine":false}
         ]
         """#
         var value = AppStatus()
         value.auth = .signedIn
-        value.account = Account(id: "account-personal", name: "Personal account", email: "alex@hey.com")
+        value.account = Account(id: "account-personal", name: "Personal account", email: "alex@example.com")
         value.devices = try! JSONDecoder().decode([MeshDevice].self, from: Data(json.utf8))
         value.connection = .connected
         value.updatedAt = now; value.launchAtLogin = true

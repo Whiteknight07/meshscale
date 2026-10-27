@@ -60,7 +60,7 @@ B. Status-led list (chosen)
     | [mac] old-thinkpad        Offline |
     |       Last seen 3 days ago  [ > ] |
     |----------------------------------|
-    | alex@hey.com                   > |
+    | alex@example.com               > |
     | Personal account           Quit  |
     +----------------------------------+
 
@@ -115,7 +115,7 @@ The frontend `MeshBridge` methods use camelCase and promises. It accepts an inje
 
 ```json
 [
-  {"id":"reg-mac","device_id":"dev-mac","kind":"device","name":"macbook-air","dns_name":"macbook-air.mesh","user":"alex@hey.com","ipv4":"100.96.0.2","os":"mac","online":true,"last_seen_at":"2026-10-26T12:00:00Z","this_machine":true},
+  {"id":"reg-mac","device_id":"dev-mac","kind":"device","name":"macbook-air","dns_name":"macbook-air.mesh","user":"alex@example.com","ipv4":"100.96.0.2","os":"mac","online":true,"last_seen_at":"2026-10-26T12:00:00Z","this_machine":true},
   {"id":"node-homelab","registration_id":"reg-homelab","kind":"node","name":"homelab","dns_name":"homelab.mesh","user":"Mesh node","ipv4":"100.96.0.10","os":"linux","online":true,"last_seen_at":"2026-10-26T12:00:00Z","this_machine":false,"connection_state":"healthy"}
 ]
 ```
