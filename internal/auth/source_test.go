@@ -9,10 +9,13 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/Whiteknight07/meshscale/internal/cfapi"
 )
 
 func testSession() *Session {
@@ -212,5 +215,40 @@ func TestRefreshLockCancellation(t *testing.T) {
 	_, err = NewTokenSource(NewClient(), store, testSession()).Token(ctx)
 	if !errors.Is(err, context.DeadlineExceeded) {
 		t.Fatalf("lock cancellation: %v", err)
+	}
+}
+
+// Cloudflare answers a dead refresh token with 400 invalid_grant. The CLI must
+// report it as signed out (the Mac app keys on "not logged in:"), while a
+// server error stays a retryable failure.
+func TestRejectedRefreshRequiresLogin(t *testing.T) {
+	for _, tc := range []struct {
+		status    int
+		wantLogin bool
+	}{{400, true}, {401, true}, {500, false}, {429, false}} {
+		t.Run(fmt.Sprint(tc.status), func(t *testing.T) {
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(tc.status)
+				w.Write([]byte(`{"error":"invalid_grant"}`))
+			}))
+			defer server.Close()
+			store := &Store{Path: filepath.Join(privateAuthDir(t), "oauth.json")}
+			session := testSession()
+			if err := store.Save(session); err != nil {
+				t.Fatal(err)
+			}
+			client := NewClient()
+			client.TokenURL = server.URL
+			_, err := NewTokenSource(client, store, session).Token(context.Background())
+			if err == nil {
+				t.Fatal("rejected refresh returned a token")
+			}
+			if got := errors.Is(err, cfapi.ErrLoginRequired); got != tc.wantLogin {
+				t.Fatalf("login required = %v, want %v (%v)", got, tc.wantLogin, err)
+			}
+			if tc.wantLogin && !strings.HasPrefix(err.Error(), "not logged in:") {
+				t.Fatalf("message %q lacks the signed-out prefix", err)
+			}
+		})
 	}
 }

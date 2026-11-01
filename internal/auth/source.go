@@ -61,11 +61,16 @@ func (s *TokenSource) Token(ctx context.Context) (string, error) {
 	}
 	if time.Until(s.session.Expiry) <= time.Minute {
 		if s.session.RefreshToken == "" {
-			return "", errors.New("OAuth login expired: run `meshscale login` again")
+			return "", cfapi.ErrLoginRequired
 		}
 		token, err := s.client.tokenRequest(ctx, url.Values{
 			"grant_type": {"refresh_token"}, "refresh_token": {s.session.RefreshToken},
 		})
+		var rejected *tokenError
+		if errors.As(err, &rejected) && (rejected.status == 400 || rejected.status == 401) {
+			// invalid_grant or invalid_client: only a new sign-in can recover.
+			return "", fmt.Errorf("%w (HTTP %d)", cfapi.ErrLoginRequired, rejected.status)
+		}
 		if err != nil {
 			return "", err
 		}

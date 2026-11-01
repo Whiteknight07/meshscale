@@ -48,6 +48,12 @@ func NewClient() *Client {
 	}
 }
 
+type tokenError struct{ status int }
+
+func (e *tokenError) Error() string {
+	return fmt.Sprintf("OAuth token request failed (HTTP %d); run `meshscale login` again", e.status)
+}
+
 type tokenResponse struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
@@ -65,7 +71,7 @@ func (c *Client) tokenRequest(ctx context.Context, values url.Values) (*tokenRes
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		// Error bodies may contain credentials; report only the status.
-		return nil, fmt.Errorf("OAuth token request failed (HTTP %d); run `meshscale login` again", resp.StatusCode)
+		return nil, &tokenError{status: resp.StatusCode}
 	}
 	var token tokenResponse
 	if err := json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&token); err != nil {

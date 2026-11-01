@@ -170,6 +170,13 @@ func TestTokensAndContext(t *testing.T) {
 	if _, err := c.Account(context.Background(), "acc"); !errors.Is(err, wantErr) {
 		t.Fatalf("got %v", err)
 	}
+	// A dead login keeps its sign-in instruction instead of a vague message.
+	c.Tokens = tokenFunc(func(context.Context) (string, error) {
+		return "", fmt.Errorf("%w (HTTP 400)", ErrLoginRequired)
+	})
+	if _, err := c.Account(context.Background(), "acc"); !errors.Is(err, ErrLoginRequired) || !strings.HasPrefix(err.Error(), "not logged in:") {
+		t.Fatalf("got %v", err)
+	}
 }
 
 func TestTypedMethods(t *testing.T) {

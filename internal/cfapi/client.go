@@ -159,6 +159,9 @@ func (c *Client) requestOnce(ctx context.Context, method, path string, query url
 		return nil, fmt.Errorf("cloudflare: no token source")
 	}
 	token, err := c.Tokens.Token(ctx)
+	if errors.Is(err, ErrLoginRequired) {
+		return nil, &safeError{message: ErrLoginRequired.Error(), cause: err}
+	}
 	if err != nil {
 		return nil, &safeError{message: "cloudflare token unavailable", cause: err}
 	}
@@ -356,6 +359,10 @@ func send[T any](ctx context.Context, c *Client, method, path string, body any) 
 	_, err := c.request(ctx, method, path, nil, body, &result)
 	return result, err
 }
+
+// ErrLoginRequired means the saved login can no longer be renewed. The
+// "not logged in:" prefix is what the Mac app reads to offer sign-in.
+var ErrLoginRequired = errors.New("not logged in: the saved Cloudflare login expired or was revoked; run `meshscale up` to sign in again")
 
 // safeError retains errors.Is/As without exposing credentials in diagnostics.
 type safeError struct {
