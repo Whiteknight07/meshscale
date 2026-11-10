@@ -11,8 +11,8 @@
     "test": "node --experimental-strip-types --test test/*.test.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.0",
-    "typescript": "^5.9.3",
-    "vite": "^7.1.12"
+    "@playwright/test": "^1.65.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6"
   }
 }
